@@ -1,7 +1,26 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>ChatBotAI</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudPaper Class="ma-2 pa-2" Elevation="30">
 
-Welcome to your new app.
+    <MudPaper Class="ma-2 pa-2" Elevation="30" Outlined="true" Height="700px">
+    <MudText Class="ma-2 pa-2">Witaj, porozmawiaj z chatbotem</MudText>
+        <MudStack Class="ma-2 pa-2">
+            <MudStack Row="true" Class="ma-2 pa-2">
+                <MudText Class="ma-2 pa-2">Zadaj pytanie:</MudText>
+                <MudTextField Class="ma-2 pa-2" @bind-Value="Prompt" Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="() => Send(Prompt)"
+                              Placeholder=". . . . . ." Style="width:500px;"></MudTextField>
+            </MudStack>
+            @if(ConversationHistory.Count() != 0)
+            {
+                foreach (var item in ConversationHistory)
+                {
+                    <MudText Typo="Typo.body1">@item <br /></MudText>
+                }
+                
+            }
+        </MudStack>
+    </MudPaper>
+</MudPaper>

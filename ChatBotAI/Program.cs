@@ -1,4 +1,6 @@
 using ChatBotAI.Components;
+using ChatBotAI.Services;
+using MudBlazor.Services;
 
 namespace ChatBotAI
 {
@@ -8,17 +10,24 @@ namespace ChatBotAI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddMudServices();
+
+            var openAIApiKey = builder.Configuration["OpenAI:ApiKey"] ?? throw new ArgumentNullException("ApiKey not found!");
+            builder.Services.AddHttpClient("OpenAI");
+            builder.Services.AddScoped<OpenAIService>(op =>
+            {
+                var httpFactory = op.GetRequiredService<IHttpClientFactory>();
+                var httpClient = httpFactory.CreateClient("OpenAI");
+                return new OpenAIService(httpClient, openAIApiKey);
+            });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
